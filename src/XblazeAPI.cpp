@@ -6,6 +6,8 @@
 #include <Geode/utils/StringMap.hpp>
 
 #include <arc/prelude.hpp>
+#include <arc/time/Sleep.hpp>
+#include <asp/time/Duration.hpp>
 #include <fmt/compile.h>
 
 using namespace geode::prelude;
@@ -124,5 +126,13 @@ namespace xblazeapi {
         geode::queueInMainThread([msg, icon] {
             quickNotification(msg, icon);
         });
+    }
+
+    arc::Future<> sleepSecs(int s) {
+        co_await arc::sleep(asp::Duration::fromSecs(s));
+    }
+
+    arc::Future<> sleepMillis(int ms) {
+        co_await arc::sleep(asp::Duration::fromMillis(ms));
     }
 }

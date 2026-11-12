@@ -65,4 +65,8 @@ namespace xblazeapi {
         geode::ZStringView msg,
         geode::NotificationIcon icon = geode::NotificationIcon::None
     );
+
+    // Zzz
+    arc::Future<> sleepSecs(int s);
+    arc::Future<> sleepMillis(int ms);
 }
