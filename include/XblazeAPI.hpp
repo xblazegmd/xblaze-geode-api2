@@ -10,6 +10,7 @@
 #include <string_view>
  
 namespace xblazeapi {
+    // GD Servers
     const std::string BOOMLINGS = "https://www.boomlings.com/database/";
     const std::string SECRET = "Wmfd2893gb7";
 
@@ -32,6 +33,7 @@ namespace xblazeapi {
         std::string sep = ":"
     );
 
+    // General web requests
     arc::Future<bool> doWeHaveInternet(const std::string& url = "http://connectivitycheck.gstatic.com/generate_204");
 
     // Yes/No popups

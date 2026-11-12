@@ -1,9 +1,8 @@
 #include <XblazeAPI.hpp>
 
 #include <Geode/Geode.hpp>
-#include <Geode/utils/general.hpp>
+#include <Geode/ui/Notification.hpp>
 #include <Geode/utils/web.hpp>
-#include <Geode/utils/string.hpp>
 #include <Geode/utils/StringMap.hpp>
 
 #include <arc/prelude.hpp>
@@ -65,5 +64,65 @@ namespace xblazeapi {
             ret.emplace(pieces[i], pieces[i+1]);
         }
         return ret;
+    }
+
+    arc::Future<bool> doWeHaveInternet(const std::string& url) {
+        auto check = co_await web::WebRequest()
+            .userAgent("GeometryDash/2.2091")
+            .timeout(std::chrono::seconds(10))
+            .get(url);
+        co_return check.ok();
+    }
+
+    void confirmYesNo(
+        geode::ZStringView title,
+        geode::ZStringView msg,
+        geode::Function<void()> yesCb,
+        geode::Function<void()> noCb,
+        bool reverse
+    ) {
+        confirmYesNo(title, msg, "Yes", "No", std::move(yesCb), std::move(noCb), reverse);
+    }
+
+    void confirmYesNo(
+        geode::ZStringView title,
+        geode::ZStringView msg,
+        geode::ZStringView yesBtn,
+        geode::ZStringView noBtn,
+        geode::Function<void()> yesCb,
+        geode::Function<void()> noCb,
+        bool reverse
+    ) {
+        auto btn1 = reverse ? yesBtn : noBtn;
+        auto btn2 = reverse ? noBtn : yesBtn;
+        geode::createQuickPopup(
+            title, msg, btn1, btn2,
+            [yesCb = std::move(yesCb), noCb = std::move(noCb), reverse](auto, bool btn2) mutable {
+                bool yes = reverse ? !btn2 : btn2;
+                if (yes) {
+                    yesCb();
+                } else {
+                    noCb();
+                }
+            }
+        );
+    }
+
+    geode::Notification* quickNotification(
+        geode::ZStringView msg,
+        geode::NotificationIcon icon
+    ) {
+        auto ret = Notification::create(msg, icon);
+        ret->show();
+        return ret;
+    }
+
+    void quickNotificationTS(
+        geode::ZStringView msg,
+        geode::NotificationIcon icon
+    ) {
+        geode::queueInMainThread([msg, icon] {
+            quickNotification(msg, icon);
+        });
     }
 }
