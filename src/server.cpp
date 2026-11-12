@@ -7,10 +7,24 @@
 #include <Geode/utils/StringMap.hpp>
 
 #include <arc/prelude.hpp>
+#include <fmt/compile.h>
 
 using namespace geode::prelude;
 
 namespace xblazeapi {
+    arc::Future<ServerResponse> requestGDServers(
+        std::string_view endpoint,
+        std::initializer_list<std::pair<std::string, std::string>> body,
+        int timeout
+    ) {
+        fmt::memory_buffer buf;
+        for (const auto& [k, v] : body) {
+            fmt::format_to(std::back_inserter(buf), FMT_COMPILE("{}={}&"), k, v);
+        }
+        buf.resize(buf.size() - 1);
+        return requestGDServers(endpoint, {buf.data(), buf.size()}, timeout);
+    }
+
     arc::Future<ServerResponse> requestGDServers(
         std::string_view endpoint,
         std::string_view body,
