@@ -2,6 +2,7 @@
 
 #include <Geode/Result.hpp>
 #include <Geode/utils/StringMap.hpp>
+#include <Geode/utils/ZStringView.hpp>
 
 #include <arc/future/Future.hpp>
 #include <initializer_list>
@@ -32,4 +33,25 @@ namespace xblazeapi {
     );
 
     arc::Future<bool> doWeHaveInternet(const std::string& url = "http://connectivitycheck.gstatic.com/generate_204");
+
+    // Yes/No popups
+    using PopupCallback = geode::Function<void()>;
+    
+    void confirmYesNo(
+        geode::ZStringView title,
+        geode::ZStringView msg,
+        geode::Function<void()> yesCb,
+        geode::Function<void()> noCb = []{},
+        bool reverse = false
+    );
+
+    void confirmYesNo(
+        geode::ZStringView title,
+        geode::ZStringView msg,
+        geode::ZStringView yesBtn,
+        geode::ZStringView noBtn,
+        geode::Function<void()> yesCb,
+        geode::Function<void()> noCb = []{},
+        bool reverse = false
+    );
 }
