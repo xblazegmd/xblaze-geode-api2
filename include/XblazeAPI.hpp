@@ -35,8 +35,6 @@ namespace xblazeapi {
     arc::Future<bool> doWeHaveInternet(const std::string& url = "http://connectivitycheck.gstatic.com/generate_204");
 
     // Yes/No popups
-    using PopupCallback = geode::Function<void()>;
-    
     void confirmYesNo(
         geode::ZStringView title,
         geode::ZStringView msg,
