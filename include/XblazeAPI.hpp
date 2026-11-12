@@ -52,4 +52,15 @@ namespace xblazeapi {
         geode::Function<void()> noCb = []{},
         bool reverse = false
     );
+
+    // Quick notifications
+    geode::Notification* quickNotification(
+        geode::ZStringView msg,
+        geode::NotificationIcon icon = geode::NotificationIcon::None
+    );
+
+    void quickNotificationTS(
+        geode::ZStringView msg,
+        geode::NotificationIcon icon = geode::NotificationIcon::None
+    );
 }
