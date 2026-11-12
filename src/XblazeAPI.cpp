@@ -18,12 +18,7 @@ namespace xblazeapi {
         std::initializer_list<std::pair<std::string, std::string>> body,
         int timeout
     ) {
-        fmt::memory_buffer buf;
-        for (const auto& [k, v] : body) {
-            fmt::format_to(std::back_inserter(buf), FMT_COMPILE("{}={}&"), k, v);
-        }
-        buf.resize(buf.size() - 1);
-        return requestGDServers(endpoint, {buf.data(), buf.size()}, timeout);
+        return requestGDServers(endpoint, bodyString(std::move(body)), timeout);
     }
 
     arc::Future<ServerResponse> requestGDServers(
@@ -34,7 +29,7 @@ namespace xblazeapi {
         auto req = web::WebRequest()
             .userAgent("")
             .bodyString(body)
-            .timeout(std::chrono::seconds(10)); // TODO: Use asp::time instead
+            .timeout(std::chrono::seconds(10)); // TODO: Use asp::time
 
         auto res = co_await req.post(fmt::format("{}{}", BOOMLINGS, endpoint));
         if (!res.ok()) {
@@ -84,6 +79,15 @@ namespace xblazeapi {
         bool reverse
     ) {
         confirmYesNo(title, msg, "Yes", "No", std::move(yesCb), std::move(noCb), reverse);
+    }
+
+    std::string bodyString(std::initializer_list<std::pair<std::string, std::string>> body) {
+        fmt::memory_buffer buf;
+        for (const auto& [k, v] : body) {
+            fmt::format_to(std::back_inserter(buf), FMT_COMPILE("{}={}&"), k, v);
+        }
+        buf.resize(buf.size() - 1);
+        return { buf.data(), buf.size() };
     }
 
     void confirmYesNo(
