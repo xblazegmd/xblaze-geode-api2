@@ -29,7 +29,7 @@ namespace xblazeapi {
         auto req = web::WebRequest()
             .userAgent("")
             .bodyString(body)
-            .timeout(std::chrono::seconds(10)); // TODO: Use asp::time
+            .timeout(asp::Duration::fromSecs(timeout));
 
         auto res = co_await req.post(fmt::format("{}{}", BOOMLINGS, endpoint));
         if (!res.ok()) {
@@ -66,7 +66,7 @@ namespace xblazeapi {
     arc::Future<bool> doWeHaveInternet(const std::string& url) {
         auto check = co_await web::WebRequest()
             .userAgent("GeometryDash/2.2091")
-            .timeout(std::chrono::seconds(10))
+            .timeout(asp::Duration::fromSecs(10))
             .get(url);
         co_return check.ok();
     }
