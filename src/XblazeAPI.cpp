@@ -31,6 +31,10 @@ namespace xblazeapi {
             .bodyString(body)
             .timeout(asp::Duration::fromSecs(timeout));
 
+        auto stuff = fmt::format("{}{}", BOOMLINGS, endpoint);
+        log::debug("URL: {}", stuff);
+        log::debug("Params: {}", body);
+
         auto res = co_await req.post(fmt::format("{}{}", BOOMLINGS, endpoint));
         if (!res.ok()) {
             co_return Err(res.code());
